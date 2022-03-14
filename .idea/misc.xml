@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/black_button.xml" value="0.1095" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/btn_back.xml" value="0.1095" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/button_background.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic__note.xml" value="0.1245" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_add_note.xml" value="0.1245" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_app_background.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_date.xml" value="0.1095" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_edit.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_email.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_input_bk_black.xml" value="0.1095" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_lock.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_logout.xml" value="0.1355" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_map.xml" value="0.1245" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_marker_cluster.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_marker_cluster_all.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/ic_person.xml" value="0.1245" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/drawable/input_bg.xml" value="0.1" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/activity_new_note.xml" value="0.11231884057971014" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/activity_one_note.xml" value="0.15989583333333332" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/dialog.xml" value="0.17481884057971014" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/fragment_map.xml" value="0.13994565217391305" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/fragment_maps.xml" value="0.17481884057971014" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/fragment_note.xml" value="0.24343015214384509" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/home_layout.xml" value="0.13994565217391305" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/layout_geonotes_widget.xml" value="0.1203125" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/note_item.xml" value="0.13994565217391305" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/layout/register_layout.xml" value="0.1890625" />
+        <entry key="..\:/Users/user/AndroidStudioProjects/MapProject/app/src/main/res/menu/bottom_navigation.xml" value="0.190625" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
