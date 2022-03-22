@@ -86,11 +86,11 @@ public class NoteFragment extends Fragment {
 
         noteAdapter = new NoteAdapter(getContext(), notesList);
         recyclerView.setAdapter(noteAdapter);
-        readPost();
+        readNote();
         return view;
     }
 
-    private void readPost() {
+    private void readNote() {
         String userId = fAuth.getCurrentUser().getUid();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("Notes");
         reference.addValueEventListener(new ValueEventListener() {
@@ -108,7 +108,7 @@ public class NoteFragment extends Fragment {
                         String user = snapshot1.child("user").getValue().toString();
                         String latitude = snapshot1.child("latitude").getValue().toString();
                         String longitute = snapshot1.child("longitute").getValue().toString();
-                        String location = "";
+                        String location = snapshot1.child("location").getValue().toString();
                         Note note1 = new Note(title, note, user, date, location, latitude, longitute, noteId);
                         notesList.add(note1);
                     }

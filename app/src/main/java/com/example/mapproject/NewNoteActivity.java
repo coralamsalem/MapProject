@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,8 +35,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class NewNoteActivity extends AppCompatActivity {
 
@@ -51,7 +55,8 @@ public class NewNoteActivity extends AppCompatActivity {
     StorageReference storageR;
     private FirebaseFirestore firebaseFirestore;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-
+    private Geocoder geocoder;
+    private String finalLocation;
     StorageTask uploadTask;
     FirebaseAuth fAuth;
     String userId;
@@ -67,11 +72,6 @@ public class NewNoteActivity extends AppCompatActivity {
         getLocationPermissions();
         getDeviceLocation();
 
-        Intent intent = getIntent();
-        title = intent.getStringExtra("title");
-        noteSt = intent.getStringExtra("note");
-        dateSt = intent.getStringExtra("date");
-        noteId = intent.getStringExtra("noteId");
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -83,14 +83,8 @@ public class NewNoteActivity extends AppCompatActivity {
         noteTitle = findViewById(R.id.note_title);
         date = findViewById(R.id.date);
         addNewNote = findViewById(R.id.add_btn);
-        delete = findViewById(R.id.delete_btn);
         Toast.makeText(NewNoteActivity.this,lon +" " + lat, Toast.LENGTH_LONG).show();
 
-        /* if (!title.isEmpty()){
-            noteTitle.setText(title);
-            note.setText(noteSt);
-            date.setText(dateSt);
-        } */
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,20 +133,7 @@ public class NewNoteActivity extends AppCompatActivity {
                 }
             }
         });
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(noteId.isEmpty())
-                {
-                    startActivity(new Intent(NewNoteActivity.this, HomeActivity.class));
-                }
-                else{
-                    FirebaseDatabase reference3 = FirebaseDatabase.getInstance();
-                    reference3.getReference("Users").child(userId).child("Notes").child(noteId).removeValue();
-                    startActivity(new Intent(NewNoteActivity.this, HomeActivity.class));
-                }
-            }
-        });
+
 
 
     }
@@ -162,9 +143,9 @@ public class NewNoteActivity extends AppCompatActivity {
         progressDialog.setMessage("Posting");
         progressDialog.show();
 
-   userId = fAuth.getCurrentUser().getUid();
+        userId = fAuth.getCurrentUser().getUid();
         DatabaseReference reference;
-        if (noteId.isEmpty()) {
+
 
             reference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("Notes");
 
@@ -178,25 +159,11 @@ public class NewNoteActivity extends AppCompatActivity {
             hashMap.put("date", dateSt);
             hashMap.put("user", userId);
             hashMap.put("latitude", lat);
-            hashMap.put("location", lon);
+            hashMap.put("longitute", lon);
+            hashMap.put("location", finalLocation);
             reference.child(noteId).setValue(hashMap);
 
-        }else{
-            reference = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("Notes").child(noteId);
 
-
-            HashMap<String, Object> hashMap = new HashMap<>();
-            hashMap.put("noteId", noteId);
-            hashMap.put("noteImage", myUrl);
-            hashMap.put("title", title);
-            hashMap.put("note", noteSt);
-            hashMap.put("date", dateSt);
-            hashMap.put("user", userId);
-            hashMap.put("latitude", lat);
-            hashMap.put("location", lon);
-            reference.setValue(hashMap);
-
-        }
         progressDialog.dismiss();
         startActivity(new Intent(NewNoteActivity.this, HomeActivity.class));
         finish();
@@ -229,7 +196,10 @@ public class NewNoteActivity extends AppCompatActivity {
                     if (task.isSuccessful() && task.getResult() != null) {
                         Log.d(TAG, "onComplete: found location!");
                         currentLocation = (Location) task.getResult();
-                        getLocation(currentLocation);
+                        lon = currentLocation.getLongitude();
+                        lat = currentLocation.getLatitude();
+                        getLocationDetails(currentLocation);
+                        Toast.makeText(NewNoteActivity.this,currentLocation.getLatitude() +" " + currentLocation.getLongitude(), Toast.LENGTH_LONG).show();
                     } else {
                         Log.d(TAG, "onComplete: current location is null");
                         Toast.makeText(NewNoteActivity.this, "current location not found" , Toast.LENGTH_SHORT).show();
@@ -240,79 +210,41 @@ public class NewNoteActivity extends AppCompatActivity {
             Log.e(TAG, "getDeviceLocation: SecurityException");
         }
     }
+    private String getLocationDetails(Location location) {
+        geocoder = new Geocoder(this);
 
-    private void getLocation(Location currentLocation) {
-        lon = currentLocation.getLatitude();
-        lat = currentLocation.getLongitude();
+        List<Address> addresses = null;
 
-    }
+        try {
+            addresses = geocoder.getFromLocation(
+                    location.getLatitude(),
+                    location.getLongitude(),
+                    1);
+        } catch (IOException ioException) {
+            // Catch network or other I/O problems.
+            finalLocation = "service not available";
+            Log.e(TAG, finalLocation, ioException);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            // Catch invalid latitude or longitude values.
+            finalLocation = "invalid lat long used";
+            Log.e(TAG, finalLocation + ". " +
+                    "Latitude = " + location.getLatitude() +
+                    ", Longitude = " +
+                    location.getLongitude(), illegalArgumentException);
+        }
 
-   /* @SuppressLint("MissingPermission")
-    private void getLastLocation() {
-        // check if location is enabled
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if(locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)){
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-            final Task<Location> location = mFusedLocationClient.getLastLocation();
-
-            location.addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    if (task.isSuccessful()) {
-                        Location location = task.getResult();
-                        if(location == null){
-                            requestNewLocationData();
-                        }
-                        else {
-                            try {
-                                 lon = String.valueOf(location.getLongitude());
-                                 lat = String.valueOf(location.getLatitude());
-
-
-                            } catch (Exception e) {
-                                Log.e("error: ", e.getMessage());
-                            }
-                        }
-                    }
-                }
-            });
-
+        // Handle case where no address was found.
+        if (addresses == null || addresses.size() == 0) {
+            if (finalLocation.isEmpty()) {
+                finalLocation = "no address found" ;
+                Log.e(TAG, finalLocation);
+            }
         } else {
-            Toast.makeText(this, "Please turn on your location...", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            startActivity(intent);
+            Address address = addresses.get(0);
+            Log.i(TAG, "address found");
+            finalLocation = address.getAddressLine(0);
         }
+        return finalLocation;
     }
-
-
-    @SuppressLint("MissingPermission")
-    private void requestNewLocationData() {
-
-        // Initializing LocationRequest
-        // object with appropriate methods
-        LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(5);
-        mLocationRequest.setFastestInterval(0);
-        mLocationRequest.setNumUpdates(1);
-
-        // setting LocationRequest
-        // on FusedLocationClient
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-    }
-    private LocationCallback mLocationCallback = new LocationCallback() {
-
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            Location mLastLocation = locationResult.getLastLocation();
-
-        }
-    };
-
-
-*/
-
-
 }
 

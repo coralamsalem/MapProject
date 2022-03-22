@@ -11,16 +11,13 @@ public class Constants {
     public static final String KEY_TITLE = "title";
     public static final String KEY_DESCRIPTION = "description";
 
-    public static final Double DEFAULT_LATITUDE = 1.2950869;
-    public static final Double DEFAULT_LONGITUDE = 103.8419714;
+    public static final Double DEFAULT_LATITUDE = 34.7781308;  //1.2950869;
+    public static final Double DEFAULT_LONGITUDE = 32.0215684; //103.8419714;
 
     public static final String DEFAULT_TITLE = "GeoNotes";
     public static final float DEFAULT_ZOOM = 15f;
 
     public static final int MARKER_DIMENSION = 80;
 
-    public static final String GITHUB = "https://github.com/nasreekar";
-    public static final String LINKEDIN = "https://www.linkedin.com/in/abhijithsreekar/";
-    public static final String STACKOVERFLOW = "https://stackoverflow.com/users/6169668/asn";
 
 }

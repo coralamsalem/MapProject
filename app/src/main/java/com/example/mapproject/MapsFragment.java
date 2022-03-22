@@ -4,8 +4,6 @@ import static com.example.mapproject.Utils.Constants.DEFAULT_ZOOM;
 import static com.example.mapproject.Utils.GeoNotesUtils.showMarkerInfo;
 
 import android.Manifest;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -26,7 +24,6 @@ import com.example.mapproject.Utils.Constants;
 import com.example.mapproject.Utils.GeoNotesUtils;
 import com.example.mapproject.Utils.GooglePlayServicesHelper;
 import com.example.mapproject.Utils.MarkerClusterRenderer;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -39,9 +36,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -52,7 +46,6 @@ import com.google.maps.android.clustering.ClusterManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -62,7 +55,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private static final String TAG = MapsFragment.class.getSimpleName();
 
     private String finalLocation;
-
+    String[] note1;
     private GoogleMap mMap;
     private Location currentLocation;
     private List<Note> noteList = new ArrayList<>();
@@ -72,7 +65,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private static final String COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATIONS_PERMISSIONS_REQUEST = 5445;
 
-    private AutocompleteSupportFragment autocompleteFragment;
 
     private Geocoder geocoder;
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
@@ -80,7 +72,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     DatabaseReference notesRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("Notes");
 
 
-    private List<Note> allNotesFromDb = new ArrayList<>();
+
 
     public MapsFragment() {
     }
@@ -131,15 +123,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             Places.initialize(getActivity().getApplicationContext(), "AIzaSyAg6KS4cU2gwhVG7lvkB0_5Rewn2dkObIE");
         }
 
-        // Initialize the AutocompleteSupportFragment.
-       autocompleteFragment = (AutocompleteSupportFragment)
-                getChildFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
-        // Specify the types of place data to return.
-        if (autocompleteFragment != null) {
-            autocompleteFragment.setHint("Search Location");
-            autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG));
-        }
 
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
@@ -170,26 +154,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private void init() {
         Log.d(TAG, "init: initializing");
-        // Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
-
-            }
-
-            @Override
-            public void onError(@NonNull Status status) {
-                Log.i(TAG, "An error occurred: " + status);
-            }
-
-        });
-
-
         getAllNotes();
-
-
-
         mMap.setOnMarkerClickListener(marker -> {
             displayMarkerWithNotes(marker);
             return true;
@@ -212,12 +177,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                         Double lon, lat;
                         lon = currentLocation.getLongitude();
                         lat = currentLocation.getLatitude();
-
-                        SharedPreferences pref = getContext().getSharedPreferences("MyPref", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putFloat("lon", lon.floatValue());
-                        editor.putFloat("lat", lat.floatValue());
-                        editor.commit();
 
                         moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                 "My Location");
@@ -245,7 +204,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     String user = snapshot1.child("user").getValue().toString();
                     String latitude = snapshot1.child("latitude").getValue().toString();
                     String longitute = snapshot1.child("longitute").getValue().toString();
-                    String location = "";
+                    String location = snapshot1.child("location").getValue().toString();
                     Note note1 = new Note(title, note, user, date, location, latitude, longitute, noteId);
                     noteList.add(note1);
                 }
@@ -267,7 +226,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
 
     private void displayMarkerWithNotes(Marker marker) {
-        Toast.makeText(this.getContext(), marker.getTitle(), Toast.LENGTH_SHORT).show();
+
     }
 
     public String getLocationDetails(LatLng latLng) {
@@ -335,6 +294,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
                     .position(latLng)
                     .title(title)
                     .icon(GeoNotesUtils.bitmapDescriptorFromVector(getContext(), R.drawable.ic_marker_cluster));
+
             mMap.addMarker(options);
         }
 
@@ -352,15 +312,29 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         // moveCamera(new LatLng(Constants.DEFAULT_LATITUDE, Constants.DEFAULT_LONGITUDE), Constants.DEFAULT_TITLE);
 
         ClusterManager<Note> mClusterManager = new ClusterManager<>(getContext(), mMap);
-        mClusterManager.setRenderer(new MarkerClusterRenderer(getContext(), mMap, mClusterManager, fAuth.getCurrentUser().getEmail()));
+
+        mClusterManager.setRenderer(new MarkerClusterRenderer(getContext(), mMap, mClusterManager, fAuth.getCurrentUser().getUid()));
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
+
         mMap.setOnInfoWindowClickListener(marker -> {
-            String title = "More Details of " + "\"" + marker.getTitle() + "\"";
-            String description = marker.getSnippet();
-            showMarkerInfo((AppCompatActivity) getContext(), title, description);
+
+         String title = marker.getTitle();
+         note1 = marker.getSnippet().split("; ");
+         String description = note1[0];
+         String date = note1[1];
+         String location = note1[2];
+         String user = note1[3];
+         String noteId = note1[4];
+         double latitude = marker.getPosition().latitude;
+         double longitute = marker.getPosition().longitude;
+
+         marker.setSnippet(description);
+
+         showMarkerInfo((AppCompatActivity) getContext(), user, title, description, date, location, latitude, longitute, noteId);
 
         });
+
         addNoteItemsWhichHasLatLng(mClusterManager, noteList);
         mClusterManager.cluster();
     }
@@ -373,103 +347,3 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 }
-
-
-
-
-
-
-
-        /*implements OnMapReadyCallback {
-    GoogleMap googleMap;
-    MapView mapView;
-    View view;
-    SupportMapFragment mapFragment;
-    FusedLocationProviderClient client;
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_maps, container, false);
-        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        client = LocationServices.getFusedLocationProviderClient(getContext());
-
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        mapView = (MapView) view.findViewById(R.id.maps_view);
-
-        if (mapView != null) {
-            mapView.onCreate(null);
-            mapView.onResume();
-            mapView.getMapAsync(this);
-            getCurrentLocation();
-        }
-        /*SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(callback);
-        }*/
-/*    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        MapsInitializer.initialize(getContext());
-        this.googleMap = googleMap;
-
-        googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        getCurrentLocation();
-       /* googleMap.addMarker(new MarkerOptions().position(new LatLng(-34, 151)).title("Marker in Sydney"));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(-34, 151)));
-
-*/
- /*   }
-
-    private void getCurrentLocation() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-
-            Task<Location> task = client.getLastLocation();
-            task.addOnSuccessListener(new OnSuccessListener<Location>() {
-                @Override
-                public void onSuccess(Location location) {
-                    if (location != null) {
-                        mapFragment.getMapAsync(new OnMapReadyCallback() {
-                            @Override
-                            public void onMapReady(GoogleMap googleMap) {
-                                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                                MarkerOptions options = new MarkerOptions().position(latLng);
-                                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                                googleMap.addMarker(options);
-                            }
-                        });
-                    }
-                }
-
-            });
-        }else{
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    44);
-        }
-
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 44){
-            if(grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                getCurrentLocation();
-            }
-        }
-    }
-}
-*/

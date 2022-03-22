@@ -55,26 +55,15 @@ public class NoteAdapter  extends RecyclerView.Adapter<NoteAdapter.ViewHolder>{
                 intent.putExtra("title", note.getTitle());
                 intent.putExtra("note", note.getDescription());
                 intent.putExtra("date", note.getDate());
+                intent.putExtra("userId", note.getUser());
+                intent.putExtra("lat",note.getPosition().latitude);
+                intent.putExtra("lon",note.getPosition().longitude);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
 
             }
         });
 
-        holder.edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, NewNoteActivity.class);
-                intent.putExtra("noteId", note.getNoteId());
-                intent.putExtra("location", note.getLocation());
-                intent.putExtra("title", note.getTitle());
-                intent.putExtra("note", note.getDescription());
-                intent.putExtra("date", note.getDate());
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
-
-            }
-        });
 
     }
 
@@ -93,7 +82,7 @@ public class NoteAdapter  extends RecyclerView.Adapter<NoteAdapter.ViewHolder>{
             note = itemView.findViewById(R.id.note);
             date =  itemView.findViewById(R.id.note_date);
             image = itemView.findViewById(R.id.note_image);
-            edit = itemView.findViewById(R.id.edit);
+
 
         }
     }

@@ -6,14 +6,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +22,10 @@ public class HomeActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     private ImageView logout;
+    private TextView welcome;
     FirebaseAuth fAuth;
+    BottomNavigationView bottomNavigationView;
+    String from="";
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
             new BottomNavigationView.OnNavigationItemSelectedListener(){
@@ -38,6 +40,7 @@ public class HomeActivity extends AppCompatActivity {
                         case R.id.nav_note:
                             selectedFragment = new NoteFragment();
                             toolbar.setTitle("Notes");
+                            welcome.setText("");
                             break;
 
                     }
@@ -53,12 +56,16 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.home_layout);
-        Toast.makeText(HomeActivity.this,"Welcome!", Toast.LENGTH_LONG).show();
         fAuth = FirebaseAuth.getInstance();
         toolbar = findViewById(R.id.toolBar);
         logout = findViewById(R.id.toolBarLogout);
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        welcome = findViewById(R.id.welcome);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener);
+
+
+        bottomNavigationView.setSelectedItemId(R.id.nav_map);
+
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override

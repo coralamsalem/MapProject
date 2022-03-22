@@ -42,7 +42,7 @@ public class Note  implements Serializable, ClusterItem {
 
     @Override
     public String getSnippet() {
-        return null;
+        return  description+"; "+date+"; "+location+"; "+user+"; "+noteId;
     }
 
 

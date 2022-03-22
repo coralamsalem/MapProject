@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Views.HomeActivity"
+    tools:context=".HomeActivity"
     android:background="@color/white">
 
     <androidx.appcompat.widget.Toolbar
@@ -31,7 +31,18 @@
          android:layout_width="match_parent"
          android:layout_height="match_parent"
          android:id="@+id/container"
-         android:layout_weight="1"/>
+         android:layout_weight="1">
+         <TextView
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center"
+             android:text="Welcome!"
+             android:gravity="center"
+             android:textSize="50dp"
+             android:fontFamily="@font/suez_one_regular"
+             android:id="@+id/welcome"
+            />
+     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="match_parent"

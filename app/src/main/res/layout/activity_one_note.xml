@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="500dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/training_cell"
     app:cardCornerRadius="30dp"
@@ -21,56 +21,121 @@
 
             />
         <LinearLayout
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
             android:gravity="center"
-            android:layout_gravity="center">
-            <TextView
-                android:id="@+id/one_note_title"
+            android:orientation="vertical"
+            >
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Title"
-                android:textColor="@color/black"
-                android:singleLine="true"
-                android:textSize="40dp"
-                android:fontFamily="@font/suez_one_regular"
-                android:layout_gravity="top"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center_horizontal"
                 android:gravity="center"
+                android:orientation="vertical"
+                >
+            <EditText
+                android:id="@+id/edit_note_title"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_input_bk_black"
+                android:drawablePadding="10dp"
+                android:fontFamily="@font/thin"
+                android:textStyle="bold"
+                android:hint="Note Title"
+                android:inputType="textPersonName"
+                android:paddingStart="20dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp"
+                android:textColorHint="@color/black"
+                android:layout_marginTop="20dp"
+                android:textSize="22dp" />
 
-                />
-            <TextView
-                android:id="@+id/one_note_date"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="date"
-                android:textColor="@color/black"
-                android:singleLine="true"
-                android:textSize="20dp"
+            <Button
+                android:id="@+id/edit_date"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/btn_back"
+                android:drawableStart="@drawable/ic_date"
+                android:drawablePadding="10dp"
                 android:fontFamily="@font/thin"
-                android:layout_gravity="top"
-                android:layout_marginTop="3dp"
-                android:layout_marginStart="10dp"
-                android:gravity="center"
-                />
-            <TextView
-                android:id="@+id/one_note"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="note"
+                android:gravity="start"
+                android:paddingStart="20dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp"
+                android:text="Date"
+                android:textAllCaps="false"
                 android:textColor="@color/black"
-                android:singleLine="true"
-                android:textSize="30dp"
+                android:textSize="22dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edit_note"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:background="@drawable/ic_input_bk_black"
+                android:drawablePadding="10dp"
                 android:fontFamily="@font/thin"
-                android:layout_gravity="top"
-                android:layout_marginTop="3dp"
+                android:textStyle="bold"
+                android:hint="Description"
+                android:inputType="textMultiLine"
+                android:paddingStart="20dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:textColorHint="@color/black"
+                android:maxLines="20"
+                android:textSize="22dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:fontFamily="@font/suez_one_regular"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="22dp"
+                android:textAllCaps="false"
+                android:background="@drawable/black_button"
+                android:textColor="@color/white"
+                android:id="@+id/update_btn"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
                 android:layout_marginStart="10dp"
-                android:gravity="center"
+                android:fontFamily="@font/suez_one_regular"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="22dp"
+                android:textAllCaps="false"
+                android:background="@drawable/black_button"
+                android:textColor="@color/white"
+                android:id="@+id/delete_btn"
                 />
         </LinearLayout>
 
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
